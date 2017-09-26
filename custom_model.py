@@ -27,7 +27,7 @@ def model_fn(features, labels, mode):
       loss=loss,
       train_op=train)
 
-estimator = tf.estimator.Estimator(model_fn=model_fn)
+estimator = tf.estimator.Estimator(model_fn=model_fn, model_dir=cur_dir+'/train')
 # define our data sets
 x_train = np.array([1., 2., 3., 4.])
 y_train = np.array([0., -1., -2., -3.])

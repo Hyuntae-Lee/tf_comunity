@@ -5,33 +5,32 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 sess = tf.Session()
 
-# model
+# Model parameters
 W = tf.Variable([.3], dtype=tf.float32)
 b = tf.Variable([-.3], dtype=tf.float32)
+# Model input and output
 x = tf.placeholder(tf.float32)
+y = tf.placeholder(tf.float32)
 linear_model = W * x + b
 
-# real result
-y = tf.placeholder(tf.float32)
-squared_deltas = tf.square(linear_model - y)
-
 # loss
-loss = tf.reduce_sum(squared_deltas)
-
+loss = tf.reduce_sum(tf.square(linear_model - y))
 # optimizer
 optimizer = tf.train.GradientDescentOptimizer(0.01)
 train = optimizer.minimize(loss)
 
-# initialize
+# training data
+x_train = [1, 2, 3, 4]
+y_train = [0, -1, -2, -3]
+# training loop
 init = tf.global_variables_initializer()
-sess.run(init)
-
-# train
+sess.run(init) # reset values to wrong
 for i in range(1000):
-    sess.run(train, {x: [1, 2, 3, 4], y: [0, -1, -2, -3]})
+  sess.run(train, {x: x_train, y: y_train})
 
-# run
-print(sess.run([W, b]))
+# evaluate training accuracy
+curr_W, curr_b, curr_loss = sess.run([W, b, loss], {x: x_train, y: y_train})
+print("W: %s b: %s loss: %s"%(curr_W, curr_b, curr_loss))
 
 # graph
 train_writer = tf.summary.FileWriter(cur_dir + '/train', sess.graph)
