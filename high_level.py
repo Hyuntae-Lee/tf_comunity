@@ -36,5 +36,14 @@ eval_metrics = estimator.evaluate(input_fn=eval_input_fn)
 print("train metrics: %r"% train_metrics)
 print("eval metrics: %r"% eval_metrics)
 
+# prediction
+x_predict = np.array([10., -5.])
+predict_input_fn = tf.estimator.inputs.numpy_input_fn(
+    {"x": x_predict}, batch_size=4, num_epochs=1, shuffle=False)
+predictions = estimator.predict(input_fn=predict_input_fn)
+
+for p in predictions:
+    print("{}".format(p['predictions']))
+
 # graph
 train_writer = tf.summary.FileWriter(cur_dir + '/train', sess.graph)
